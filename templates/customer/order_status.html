@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }} Status — ArtMarket{% endblock %}
+
+{% block content %}
+<h1>Order #{{ order.id }}</h1>
+<p class="subtitle">{{ order.artwork.title }} &mdash; ${{ "%.2f"|format(order.total_price) }} ({{ order.quantity }} item{{ 's' if order.quantity > 1 else '' }})</p>
+
+{% if order.status == 'cancelled' %}
+<div class="notice-box danger">This order has been cancelled.</div>
+{% else %}
+<div class="tracker">
+    {% set steps = ['pending', 'confirmed', 'shipped', 'delivered'] %}
+    {% set current_index = steps.index(order.status) if order.status in steps else -1 %}
+    {% for step in steps %}
+        <div class="tracker-step {% if loop.index0 <= current_index %}done{% endif %}">
+            <div class="tracker-dot"></div>
+            <span class="tracker-label">{{ step|capitalize }}</span>
+        </div>
+        {% if not loop.last %}<div class="tracker-line {% if loop.index0 < current_index %}done{% endif %}"></div>{% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+<section class="section">
+    <h2>Order Details</h2>
+    <table class="data-table">
+        <tbody>
+            <tr><th>Artwork</th><td>{{ order.artwork.title }}</td></tr>
+            <tr><th>Artist</th><td>{{ order.artwork.artist.name }}</td></tr>
+            <tr><th>Quantity</th><td>{{ order.quantity }}</td></tr>
+            <tr><th>Total price</th><td>${{ "%.2f"|format(order.total_price) }}</td></tr>
+            <tr><th>Shipping address</th><td>{{ order.shipping_address }}</td></tr>
+            <tr><th>Order date</th><td>{{ order.order_date.strftime('%Y-%m-%d %H:%M') }}</td></tr>
+            <tr><th>Current status</th><td><span class="status status-{{ order.status }}">{{ order.status|capitalize }}</span></td></tr>
+        </tbody>
+    </table>
+</section>
+
+<a class="btn btn-outline" href="{{ url_for('customer.dashboard') }}">&larr; Back to dashboard</a>
+{% endblock %}

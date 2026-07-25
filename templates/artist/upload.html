@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Upload Artwork — ArtMarket{% endblock %}
+
+{% block content %}
+<div class="form-card">
+    <h1>Upload New Artwork</h1>
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="field">
+            {{ form.title.label }}
+            {{ form.title(class_="input") }}
+            {% for error in form.title.errors %}<span class="error">{{ error }}</span>{% endfor %}
+        </div>
+
+        <div class="field">
+            {{ form.description.label }}
+            {{ form.description(class_="input", rows=4) }}
+            {% for error in form.description.errors %}<span class="error">{{ error }}</span>{% endfor %}
+        </div>
+
+        <div class="field-row">
+            <div class="field">
+                {{ form.price.label }}
+                {{ form.price(class_="input") }}
+                {% for error in form.price.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+            <div class="field">
+                {{ form.category.label }}
+                {{ form.category(class_="input") }}
+                {% for error in form.category.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+        </div>
+
+        <div class="field">
+            {{ form.image.label }}
+            {{ form.image() }}
+            <p class="hint">Optional. If skipped, a placeholder will be shown.</p>
+            {% for error in form.image.errors %}<span class="error">{{ error }}</span>{% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Upload Artwork</button>
+    </form>
+</div>
+{% endblock %}

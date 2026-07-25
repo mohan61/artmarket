@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Not Found — ArtMarket{% endblock %}
+{% block content %}
+<div class="error-page">
+    <h1>404</h1>
+    <p>The page you're looking for doesn't exist.</p>
+    <a class="btn btn-primary" href="{{ url_for('main.landing') }}">Go Home</a>
+</div>
+{% endblock %}

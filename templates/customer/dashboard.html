@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard — ArtMarket{% endblock %}
+
+{% block content %}
+<h1>Welcome, {{ current_user.name }}</h1>
+<p class="subtitle">Here's a summary of your order history.</p>
+
+<a class="btn btn-primary" href="{{ url_for('main.gallery') }}">Browse the Gallery</a>
+
+<section class="section">
+    <h2>My Orders</h2>
+    {% if orders %}
+    <table class="data-table">
+        <thead>
+            <tr><th>Order #</th><th>Artwork</th><th>Qty</th><th>Total</th><th>Status</th><th>Date</th><th></th></tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.artwork.title }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>${{ "%.2f"|format(order.total_price) }}</td>
+                <td><span class="status status-{{ order.status }}">{{ order.status|capitalize }}</span></td>
+                <td>{{ order.order_date.strftime('%Y-%m-%d') }}</td>
+                <td><a href="{{ url_for('customer.order_status', order_id=order.id) }}">Track</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">You haven't placed any orders yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

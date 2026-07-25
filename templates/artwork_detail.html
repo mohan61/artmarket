@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ artwork.title }} — ArtMarket{% endblock %}
+
+{% block content %}
+<div class="detail-layout">
+    <div class="detail-image">
+        {% if artwork.image_url %}
+            <img src="{{ artwork.image_url }}" alt="{{ artwork.title }}">
+        {% else %}
+            <div class="thumb-placeholder large">{{ artwork.title[:1] }}</div>
+        {% endif %}
+    </div>
+    <div class="detail-info">
+        <span class="badge">{{ artwork.category }}</span>
+        <h1>{{ artwork.title }}</h1>
+        <p class="artwork-artist">by <strong>{{ artwork.artist.name }}</strong></p>
+        <p class="detail-price">${{ "%.2f"|format(artwork.price) }}</p>
+        <p class="detail-description">{{ artwork.description or "No description provided." }}</p>
+
+        <p class="status-line">
+            Status:
+            {% if artwork.status == 'available' %}
+                <span class="status status-available">Available</span>
+            {% else %}
+                <span class="status status-sold">Sold</span>
+            {% endif %}
+        </p>
+
+        {% if artwork.status == 'available' %}
+            {% if current_user.is_authenticated and current_user.is_customer %}
+                <a class="btn btn-primary" href="{{ url_for('customer.place_order', artwork_id=artwork.id) }}">Order this piece</a>
+            {% elif not current_user.is_authenticated %}
+                <a class="btn btn-primary" href="{{ url_for('auth.login') }}">Log in to order</a>
+            {% else %}
+                <p class="hint">Only customer accounts can place orders.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if artwork.artist.bio %}
+        <div class="artist-bio">
+            <h3>About the artist</h3>
+            <p>{{ artwork.artist.bio }}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Order {{ artwork.title }} — ArtMarket{% endblock %}
+
+{% block content %}
+<div class="order-layout">
+    <div class="order-summary">
+        <h2>{{ artwork.title }}</h2>
+        {% if artwork.image_url %}
+            <img src="{{ artwork.image_url }}" alt="{{ artwork.title }}" class="order-thumb">
+        {% endif %}
+        <p>by {{ artwork.artist.name }}</p>
+        <p class="detail-price">${{ "%.2f"|format(artwork.price) }} each</p>
+    </div>
+
+    <div class="form-card">
+        <h1>Place Order</h1>
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="field">
+                {{ form.quantity.label }}
+                {{ form.quantity(class_="input") }}
+                {% for error in form.quantity.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+
+            <div class="field">
+                {{ form.shipping_address.label }}
+                {{ form.shipping_address(class_="input", rows=3) }}
+                {% for error in form.shipping_address.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Confirm Order</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

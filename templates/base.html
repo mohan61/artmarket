@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ArtMarket{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container nav-wrap">
+            <a class="brand" href="{{ url_for('main.landing') }}">Art<span>Market</span></a>
+            <nav class="main-nav">
+                <a href="{{ url_for('main.gallery') }}">Gallery</a>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.is_artist %}
+                        <a href="{{ url_for('artist.dashboard') }}">Dashboard</a>
+                    {% elif current_user.is_customer %}
+                        <a href="{{ url_for('customer.dashboard') }}">Dashboard</a>
+                    {% elif current_user.is_admin %}
+                        <a href="{{ url_for('admin.dashboard') }}">Admin</a>
+                    {% endif %}
+                    <span class="nav-user">Hi, {{ current_user.name.split(' ')[0] }}</span>
+                    <a class="btn-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}">Login</a>
+                    <a class="btn btn-primary btn-sm" href="{{ url_for('auth.register_choice') }}">Register</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container page">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; {{ current_year }} ArtMarket &mdash; a demo art marketplace built with Flask, PostgreSQL &amp; Jinja2.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

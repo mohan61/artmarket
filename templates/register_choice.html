@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Register — ArtMarket{% endblock %}
+
+{% block content %}
+<h1>Create an account</h1>
+<p class="subtitle">Choose the type of account you'd like to create.</p>
+
+<div class="choice-grid">
+    <a class="choice-card" href="{{ url_for('auth.register_artist') }}">
+        <h2>I'm an Artist</h2>
+        <p>Sell your original artworks. New artist accounts require admin approval before you can list work.</p>
+        <span class="btn btn-primary btn-sm">Register as Artist</span>
+    </a>
+    <a class="choice-card" href="{{ url_for('auth.register_customer') }}">
+        <h2>I'm a Customer</h2>
+        <p>Browse the gallery and buy original art directly from independent artists.</p>
+        <span class="btn btn-primary btn-sm">Register as Customer</span>
+    </a>
+</div>
+
+<p class="form-footnote">Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a>.</p>
+{% endblock %}

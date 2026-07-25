@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}ArtMarket — Discover & Collect Original Art{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-text">
+        <h1>Discover original art, straight from the artist.</h1>
+        <p>ArtMarket connects independent artists with collectors. Browse paintings,
+           photography, sculpture and digital art — or register to start selling your own work.</p>
+        <div class="hero-actions">
+            <a class="btn btn-primary" href="{{ url_for('main.gallery') }}">Browse the Gallery</a>
+            <a class="btn btn-outline" href="{{ url_for('auth.register_choice') }}">Get Started</a>
+        </div>
+    </div>
+    <div class="hero-stats">
+        <div class="stat-card">
+            <span class="stat-number">{{ artist_count }}</span>
+            <span class="stat-label">Approved Artists</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">{{ artwork_count }}</span>
+            <span class="stat-label">Artworks Available</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <h2>Featured Artworks</h2>
+        <a href="{{ url_for('main.gallery') }}">View all &rarr;</a>
+    </div>
+
+    {% if featured %}
+    <div class="artwork-grid">
+        {% for art in featured %}
+        <a class="artwork-card" href="{{ url_for('main.artwork_detail', artwork_id=art.id) }}">
+            <div class="artwork-thumb">
+                {% if art.image_url %}
+                    <img src="{{ art.image_url }}" alt="{{ art.title }}">
+                {% else %}
+                    <div class="thumb-placeholder">{{ art.title[:1] }}</div>
+                {% endif %}
+            </div>
+            <div class="artwork-info">
+                <h3>{{ art.title }}</h3>
+                <p class="artwork-artist">by {{ art.artist.name }}</p>
+                <p class="artwork-price">${{ "%.2f"|format(art.price) }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No artworks available yet — check back soon!</p>
+    {% endif %}
+</section>
+
+<section class="section how-it-works">
+    <h2>How it works</h2>
+    <div class="steps-grid">
+        <div class="step-card">
+            <h3>1. Register</h3>
+            <p>Sign up as an artist to sell your work, or as a customer to start collecting.</p>
+        </div>
+        <div class="step-card">
+            <h3>2. Get Approved</h3>
+            <p>Artist accounts are reviewed by our admin team before they can list artworks.</p>
+        </div>
+        <div class="step-card">
+            <h3>3. Buy & Sell</h3>
+            <p>Upload artwork, browse the gallery, place orders, and track order status end-to-end.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

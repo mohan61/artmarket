@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Gallery — ArtMarket{% endblock %}
+
+{% block content %}
+<h1>Art Gallery</h1>
+<p class="subtitle">Browse original artworks from our community of artists.</p>
+
+<form class="filter-bar" method="get" action="{{ url_for('main.gallery') }}">
+    <input type="text" name="q" placeholder="Search by title..." value="{{ q }}">
+    <select name="category">
+        <option value="">All categories</option>
+        {% for c in categories %}
+            <option value="{{ c }}" {% if c == current_category %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+    {% if q or current_category %}
+        <a class="btn btn-outline btn-sm" href="{{ url_for('main.gallery') }}">Clear</a>
+    {% endif %}
+</form>
+
+{% if artworks %}
+<div class="artwork-grid">
+    {% for art in artworks %}
+    <a class="artwork-card" href="{{ url_for('main.artwork_detail', artwork_id=art.id) }}">
+        <div class="artwork-thumb">
+            {% if art.image_url %}
+                <img src="{{ art.image_url }}" alt="{{ art.title }}">
+            {% else %}
+                <div class="thumb-placeholder">{{ art.title[:1] }}</div>
+            {% endif %}
+        </div>
+        <div class="artwork-info">
+            <span class="badge">{{ art.category }}</span>
+            <h3>{{ art.title }}</h3>
+            <p class="artwork-artist">by {{ art.artist.name }}</p>
+            <p class="artwork-price">${{ "%.2f"|format(art.price) }}</p>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<p class="empty-state">No artworks match your search.</p>
+{% endif %}
+{% endblock %}
